@@ -15,16 +15,20 @@ Model Context Protocol (MCP) server for [mem.ai](https://mem.ai) API integration
 
 ## Installation
 
-### Global Installation (Recommended)
+No installation required! You can run the server directly using `npx` (recommended), or install it globally if you prefer.
+
+### Using npx (Recommended)
+
+```bash
+npx @hskksk/mem-ai-mcp-server
+```
+
+This automatically downloads and runs the latest version without requiring installation.
+
+### Global Installation (Optional)
 
 ```bash
 npm install -g @hskksk/mem-ai-mcp-server
-```
-
-### Local Installation
-
-```bash
-npm install @hskksk/mem-ai-mcp-server
 ```
 
 ## Configuration
@@ -52,12 +56,32 @@ MEM_API_BASE_URL=https://api.mem.ai
 
 ## Usage
 
-### With Claude Desktop
+### With Claude Desktop (Recommended)
 
 Add the following configuration to your Claude Desktop config file:
 
 **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "mem-ai": {
+      "command": "npx",
+      "args": ["-y", "@hskksk/mem-ai-mcp-server"],
+      "env": {
+        "MEM_API_KEY": "your_api_key_here"
+      }
+    }
+  }
+}
+```
+
+After restarting Claude Desktop, you'll be able to use mem.ai tools in your conversations.
+
+### Alternative: Using Global Installation
+
+If you've installed the package globally:
 
 ```json
 {
@@ -72,11 +96,13 @@ Add the following configuration to your Claude Desktop config file:
 }
 ```
 
-After restarting Claude Desktop, you'll be able to use mem.ai tools in your conversations.
-
 ### Standalone Usage
 
 ```bash
+# Using npx (recommended)
+MEM_API_KEY=your_api_key_here npx @hskksk/mem-ai-mcp-server
+
+# Or if installed globally
 MEM_API_KEY=your_api_key_here mem-ai-mcp-server
 ```
 
