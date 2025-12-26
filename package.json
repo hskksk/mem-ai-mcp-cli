@@ -16,7 +16,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx watch src/index.ts",
-    "test": "node --test --loader tsx tests/**/*.test.ts",
+    "test": "node --test --import tsx tests/**/*.test.ts",
     "lint": "eslint src --ext .ts",
     "type-check": "tsc --noEmit",
     "prepublishOnly": "pnpm run build && pnpm test",
