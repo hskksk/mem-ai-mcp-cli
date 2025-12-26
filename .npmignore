@@ -26,3 +26,9 @@ docs/
 
 # Logs
 *.log
+
+# Claude Code
+.claude/
+
+# npm pack output
+*.tgz
