@@ -47,7 +47,7 @@ export async function createServer(apiKey: string, baseURL?: string) {
   const server = new Server(
     {
       name: 'mem-ai-mcp-server',
-      version: '0.1.0',
+      version: '0.1.1',
     },
     {
       capabilities: {

@@ -231,6 +231,12 @@ If you encounter any issues or have questions:
 
 ## Changelog
 
+### 0.1.1
+
+- Fixed test script to use `--import` instead of deprecated `--loader` flag
+- Updated README to recommend `npx` usage for easier setup
+- Improved Claude Desktop configuration examples
+
 ### 0.1.0 (Initial Release)
 
 - Complete implementation of all 11 mem.ai API endpoints
