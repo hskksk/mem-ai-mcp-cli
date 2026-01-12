@@ -3,9 +3,11 @@ import { BaseTool } from '../base-tool.js';
 import type { MemAPIClient } from '../../client/mem-api-client.js';
 
 const searchCollectionsSchema = z.object({
-  query: z.string().describe('Search query'),
-  limit: z.number().int().positive().max(100).optional().describe('Maximum number of results (max 100)'),
-  offset: z.number().int().nonnegative().optional().describe('Number of results to skip'),
+  query: z.string().optional()
+    .describe('Search query (optional)'),
+  config: z.object({
+    include_description: z.boolean().optional(),
+  }).optional().describe('Response configuration'),
 });
 
 /**
@@ -15,7 +17,7 @@ export class SearchCollectionsTool extends BaseTool {
   constructor(client: MemAPIClient) {
     super(
       'search_collections',
-      'Search across all collections in mem.ai.',
+      'Search across all collections in mem.ai with optional query and configuration.',
       searchCollectionsSchema,
       client
     );
