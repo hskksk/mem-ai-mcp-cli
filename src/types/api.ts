@@ -45,18 +45,53 @@ export interface DeleteNoteResponse {
   success: boolean;
 }
 
+export interface ListNotesRequest {
+  limit?: number;
+  page?: string;
+  order_by?: 'created_at' | 'updated_at';
+  collection_id?: string;
+  contains_open_tasks?: boolean;
+  contains_tasks?: boolean;
+  contains_images?: boolean;
+  contains_files?: boolean;
+  include_note_content?: boolean;
+}
+
+export interface NoteListItem {
+  id: string;
+  title: string;
+  snippet?: string;
+  content: string;
+  collection_ids: string[];
+  created_at: string;
+  updated_at: string;
+}
+
 export interface ListNotesResponse {
-  notes: Note[];
+  request_id: string;
+  results: NoteListItem[];
+  total: number;
+  next_page: string | null;
+}
+
+export interface NoteResultsConfig {
+  include_snippet?: boolean;
+  include_content?: boolean;
 }
 
 export interface SearchNotesRequest {
-  query: string;
-  limit?: number;
-  offset?: number;
+  query?: string;
+  filter_by_collection_ids?: string[];
+  filter_by_contains_open_tasks?: boolean;
+  filter_by_contains_tasks?: boolean;
+  filter_by_contains_images?: boolean;
+  filter_by_contains_files?: boolean;
+  config?: NoteResultsConfig;
 }
 
 export interface SearchNotesResponse {
-  notes: Note[];
+  request_id: string;
+  results: Note[];
   total: number;
 }
 
@@ -86,17 +121,37 @@ export interface DeleteCollectionResponse {
   success: boolean;
 }
 
+export interface ListCollectionsRequest {
+  limit?: number;
+  page?: string;
+  order_by?: 'created_at' | 'updated_at';
+}
+
+export interface CollectionListItem {
+  id: string;
+  title: string;
+  description?: string;
+  note_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface ListCollectionsResponse {
-  collections: Collection[];
+  request_id: string;
+  results: CollectionListItem[];
+  total: number;
+  next_page: string | null;
 }
 
 export interface SearchCollectionsRequest {
-  query: string;
-  limit?: number;
-  offset?: number;
+  query?: string;
+  config?: {
+    include_description?: boolean;
+  };
 }
 
 export interface SearchCollectionsResponse {
-  collections: Collection[];
+  request_id: string;
+  results: Collection[];
   total: number;
 }

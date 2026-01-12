@@ -12,6 +12,7 @@ import type {
   CreateNoteResponse,
   GetNoteResponse,
   DeleteNoteResponse,
+  ListNotesRequest,
   ListNotesResponse,
   SearchNotesRequest,
   SearchNotesResponse,
@@ -19,6 +20,7 @@ import type {
   CreateCollectionResponse,
   GetCollectionResponse,
   DeleteCollectionResponse,
+  ListCollectionsRequest,
   ListCollectionsResponse,
   SearchCollectionsRequest,
   SearchCollectionsResponse,
@@ -149,10 +151,42 @@ export class MemAPIClient {
   }
 
   /**
-   * List all notes
+   * List all notes with optional filtering and pagination
    */
-  async listNotes(): Promise<ListNotesResponse> {
-    return this.request<ListNotesResponse>('/v2/notes', {
+  async listNotes(params?: ListNotesRequest): Promise<ListNotesResponse> {
+    const queryParams = new URLSearchParams();
+    
+    if (params?.limit !== undefined) {
+      queryParams.append('limit', params.limit.toString());
+    }
+    if (params?.page) {
+      queryParams.append('page', params.page);
+    }
+    if (params?.order_by) {
+      queryParams.append('order_by', params.order_by);
+    }
+    if (params?.collection_id) {
+      queryParams.append('collection_id', params.collection_id);
+    }
+    if (params?.contains_open_tasks) {
+      queryParams.append('contains_open_tasks', 'true');
+    }
+    if (params?.contains_tasks) {
+      queryParams.append('contains_tasks', 'true');
+    }
+    if (params?.contains_images) {
+      queryParams.append('contains_images', 'true');
+    }
+    if (params?.contains_files) {
+      queryParams.append('contains_files', 'true');
+    }
+    if (params?.include_note_content) {
+      queryParams.append('include_note_content', 'true');
+    }
+    
+    const query = queryParams.toString();
+    const endpoint = `/v2/notes${query ? `?${query}` : ''}`;
+    return this.request<ListNotesResponse>(endpoint, {
       method: 'GET',
     });
   }
@@ -198,10 +232,24 @@ export class MemAPIClient {
   }
 
   /**
-   * List all collections
+   * List all collections with optional filtering and pagination
    */
-  async listCollections(): Promise<ListCollectionsResponse> {
-    return this.request<ListCollectionsResponse>('/v2/collections', {
+  async listCollections(params?: ListCollectionsRequest): Promise<ListCollectionsResponse> {
+    const queryParams = new URLSearchParams();
+    
+    if (params?.limit !== undefined) {
+      queryParams.append('limit', params.limit.toString());
+    }
+    if (params?.page) {
+      queryParams.append('page', params.page);
+    }
+    if (params?.order_by) {
+      queryParams.append('order_by', params.order_by);
+    }
+    
+    const query = queryParams.toString();
+    const endpoint = `/v2/collections${query ? `?${query}` : ''}`;
+    return this.request<ListCollectionsResponse>(endpoint, {
       method: 'GET',
     });
   }

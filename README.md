@@ -113,22 +113,64 @@ MEM_API_KEY=your_api_key_here mem-ai-mcp-server
 - **`mem_it`** - Remember any content intelligently
   - Primary endpoint for saving information to mem.ai
   - Supports context and instructions for better processing
+  - Parameters: `input` (required), `instructions`, `context`, `timestamp`
 
 ### Notes Management
 
 - **`create_note`** - Create a new note with markdown content
+  - Parameters: `content` (required), `id`, `collection_ids`, `collection_titles`, `created_at`, `updated_at`
+
 - **`get_note`** - Retrieve a specific note by ID
+  - Parameters: `noteId` (required)
+
 - **`delete_note`** - Delete a note
-- **`list_notes`** - List all notes
-- **`search_notes`** - Search across notes with query, limit, and offset
+  - Parameters: `noteId` (required)
+
+- **`list_notes`** - List all notes with advanced filtering and pagination
+  - Supports cursor-based pagination with `page` and `next_page`
+  - Parameters:
+    - `limit` - Maximum number of results (default: 50, max: 100)
+    - `page` - Cursor for pagination (from previous `next_page`)
+    - `order_by` - Sort order: `created_at` or `updated_at` (default: `updated_at`)
+    - `collection_id` - Filter by collection ID
+    - `contains_open_tasks` - Filter notes with open tasks
+    - `contains_tasks` - Filter notes with any tasks
+    - `contains_images` - Filter notes with images
+    - `contains_files` - Filter notes with files/attachments
+    - `include_note_content` - Include full markdown content in response
+
+- **`search_notes`** - Search across notes with advanced filtering
+  - Parameters:
+    - `query` - Search query (optional)
+    - `filter_by_collection_ids` - Filter by collection IDs array
+    - `filter_by_contains_open_tasks` - Filter notes with open tasks
+    - `filter_by_contains_tasks` - Filter notes with any tasks
+    - `filter_by_contains_images` - Filter notes with images
+    - `filter_by_contains_files` - Filter notes with files
+    - `config` - Response configuration (`include_snippet`, `include_content`)
 
 ### Collections Management
 
 - **`create_collection`** - Create a new collection
+  - Parameters: `title` (required), `description`
+
 - **`get_collection`** - Retrieve a specific collection by ID
+  - Parameters: `collectionId` (required)
+
 - **`delete_collection`** - Delete a collection
-- **`list_collections`** - List all collections
-- **`search_collections`** - Search across collections with query, limit, and offset
+  - Parameters: `collectionId` (required)
+
+- **`list_collections`** - List all collections with pagination
+  - Supports cursor-based pagination with `page` and `next_page`
+  - Parameters:
+    - `limit` - Maximum number of results (default: 50, max: 100)
+    - `page` - Cursor for pagination (from previous `next_page`)
+    - `order_by` - Sort order: `created_at` or `updated_at` (default: `updated_at`)
+
+- **`search_collections`** - Search across collections
+  - Parameters:
+    - `query` - Search query (optional)
+    - `config` - Response configuration (`include_description`)
 
 ## Development
 
@@ -231,17 +273,4 @@ If you encounter any issues or have questions:
 
 ## Changelog
 
-### 0.1.1
-
-- Fixed test script to use `--import` instead of deprecated `--loader` flag
-- Updated README to recommend `npx` usage for easier setup
-- Improved Claude Desktop configuration examples
-
-### 0.1.0 (Initial Release)
-
-- Complete implementation of all 11 mem.ai API endpoints
-- TypeScript support with full type definitions
-- Comprehensive error handling
-- Input validation using Zod
-- Basic unit tests
-- Claude Desktop integration support
+See [CHANGELOG.md](CHANGELOG.md) for the full version history.
