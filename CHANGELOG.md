@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-03-30
+
+### Changed
+
+- **BREAKING**: Converted from MCP server to standalone CLI tool
+- Package renamed from `@hskksk/mem-ai-mcp-server` to `@hskksk/mem-ai-cli`
+- Binary renamed from `mem-ai-mcp-server` to `mem-ai`
+
+### Added
+
+- CLI interface with `commander` for all 11 mem.ai API endpoints
+- Human-readable output by default; `--json` flag for JSON output
+- `--api-key` global flag to pass API key without environment variable
+- `--force` flag on `delete` commands to skip confirmation prompt
+- `note create --file <path>` to read content from file or stdin (`-`)
+- `note create --collection-id` / `--collection-title` repeatable flags
+
+### Removed
+
+- MCP server implementation
+- `dotenv` dependency (use shell environment variables instead)
+- `zod` dependency
+- `@modelcontextprotocol/sdk` dependency
+- `zod-to-json-schema` dependency
+
 ## [0.2.0] - 2026-01-12
 
 ### Added

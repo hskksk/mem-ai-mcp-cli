@@ -1,176 +1,177 @@
-# mem.ai MCP Server
+# mem-ai CLI
 
-[![npm version](https://badge.fury.io/js/@hskksk%2Fmem-ai-mcp-server.svg)](https://www.npmjs.com/package/@hskksk/mem-ai-mcp-server)
+[![npm version](https://badge.fury.io/js/@hskksk%2Fmem-ai-cli.svg)](https://www.npmjs.com/package/@hskksk/mem-ai-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Model Context Protocol (MCP) server for [mem.ai](https://mem.ai) API integration. This server enables AI assistants like Claude to interact with your mem.ai memory through a standardized interface.
-
-## Features
-
-- **Complete API Coverage**: All 11 mem.ai API endpoints wrapped as MCP tools
-- **TypeScript**: Fully typed with strict mode enabled
-- **Easy Integration**: Works seamlessly with Claude Desktop and other MCP clients
-- **Error Handling**: Comprehensive error handling with detailed messages
-- **Validation**: Input validation using Zod schemas
+Command-line interface for [mem.ai](https://mem.ai) API.
 
 ## Installation
 
-No installation required! You can run the server directly using `npx` (recommended), or install it globally if you prefer.
-
-### Using npx (Recommended)
-
 ```bash
-npx @hskksk/mem-ai-mcp-server
+npm install -g @hskksk/mem-ai-cli
 ```
 
-This automatically downloads and runs the latest version without requiring installation.
-
-### Global Installation (Optional)
+Or use without installing:
 
 ```bash
-npm install -g @hskksk/mem-ai-mcp-server
+npx @hskksk/mem-ai-cli <command>
 ```
 
 ## Configuration
 
-### Get Your API Key
-
-1. Visit [mem.ai settings](https://mem.ai/settings/api)
-2. Generate a new API key
-3. Copy the key for configuration
-
-### Environment Variables
-
-Create a `.env` file or set environment variables:
+Get your API key from [mem.ai settings](https://mem.ai/settings/api) and set it as an environment variable:
 
 ```bash
-MEM_API_KEY=your_api_key_here
+export MEM_API_KEY=your_api_key_here
 ```
 
-Optional configuration:
+Or pass it directly with the `--api-key` flag:
 
 ```bash
-# Override the default API base URL (default: https://api.mem.ai)
-MEM_API_BASE_URL=https://api.mem.ai
+mem-ai --api-key your_api_key_here note list
+```
+
+Optionally, override the API base URL:
+
+```bash
+export MEM_API_BASE_URL=https://api.mem.ai
 ```
 
 ## Usage
 
-### With Claude Desktop (Recommended)
-
-Add the following configuration to your Claude Desktop config file:
-
-**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-**Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-
-```json
-{
-  "mcpServers": {
-    "mem-ai": {
-      "command": "npx",
-      "args": ["-y", "@hskksk/mem-ai-mcp-server"],
-      "env": {
-        "MEM_API_KEY": "your_api_key_here"
-      }
-    }
-  }
-}
+```
+mem-ai [options] <command>
 ```
 
-After restarting Claude Desktop, you'll be able to use mem.ai tools in your conversations.
+### Global Options
 
-### Alternative: Using Global Installation
+| Option | Description |
+|--------|-------------|
+| `--api-key <key>` | API key (overrides `MEM_API_KEY` env var) |
+| `--json` | Output as JSON |
+| `-V, --version` | Show version |
+| `-h, --help` | Show help |
 
-If you've installed the package globally:
+### Commands
 
-```json
-{
-  "mcpServers": {
-    "mem-ai": {
-      "command": "mem-ai-mcp-server",
-      "env": {
-        "MEM_API_KEY": "your_api_key_here"
-      }
-    }
-  }
-}
-```
-
-### Standalone Usage
+#### Mem It
 
 ```bash
-# Using npx (recommended)
-MEM_API_KEY=your_api_key_here npx @hskksk/mem-ai-mcp-server
-
-# Or if installed globally
-MEM_API_KEY=your_api_key_here mem-ai-mcp-server
+mem-ai mem-it <text> [options]
 ```
 
-## Available Tools
+| Option | Description |
+|--------|-------------|
+| `--instructions <text>` | Processing instructions |
+| `--context <text>` | Background context |
+| `--timestamp <iso>` | ISO 8601 timestamp |
 
-### Mem It
+#### Notes
 
-- **`mem_it`** - Remember any content intelligently
-  - Primary endpoint for saving information to mem.ai
-  - Supports context and instructions for better processing
-  - Parameters: `input` (required), `instructions`, `context`, `timestamp`
+```bash
+mem-ai note list [options]
+mem-ai note get <id>
+mem-ai note create [options]
+mem-ai note delete <id> [--force]
+mem-ai note search [query] [options]
+```
 
-### Notes Management
+**`note list` options:**
 
-- **`create_note`** - Create a new note with markdown content
-  - Parameters: `content` (required), `id`, `collection_ids`, `collection_titles`, `created_at`, `updated_at`
+| Option | Description |
+|--------|-------------|
+| `--limit <n>` | Number of notes (1-100) |
+| `--page <cursor>` | Pagination cursor |
+| `--order-by <field>` | `created_at` \| `updated_at` |
+| `--collection-id <uuid>` | Filter by collection |
+| `--open-tasks` | Only notes with open tasks |
+| `--tasks` | Only notes with tasks |
+| `--images` | Only notes with images |
+| `--files` | Only notes with files |
+| `--with-content` | Include note content in response |
 
-- **`get_note`** - Retrieve a specific note by ID
-  - Parameters: `noteId` (required)
+**`note create` options:**
 
-- **`delete_note`** - Delete a note
-  - Parameters: `noteId` (required)
+| Option | Description |
+|--------|-------------|
+| `--content <text>` | Markdown content |
+| `--file <path>` | Read content from file (`-` for stdin) |
+| `--collection-id <uuid>` | Add to collection by ID (repeatable) |
+| `--collection-title <title>` | Add to collection by title (repeatable) |
+| `--id <uuid>` | Specify note ID |
+| `--created-at <iso>` | Creation timestamp (ISO 8601) |
 
-- **`list_notes`** - List all notes with advanced filtering and pagination
-  - Supports cursor-based pagination with `page` and `next_page`
-  - Parameters:
-    - `limit` - Maximum number of results (default: 50, max: 100)
-    - `page` - Cursor for pagination (from previous `next_page`)
-    - `order_by` - Sort order: `created_at` or `updated_at` (default: `updated_at`)
-    - `collection_id` - Filter by collection ID
-    - `contains_open_tasks` - Filter notes with open tasks
-    - `contains_tasks` - Filter notes with any tasks
-    - `contains_images` - Filter notes with images
-    - `contains_files` - Filter notes with files/attachments
-    - `include_note_content` - Include full markdown content in response
+**`note search` options:**
 
-- **`search_notes`** - Search across notes with advanced filtering
-  - Parameters:
-    - `query` - Search query (optional)
-    - `filter_by_collection_ids` - Filter by collection IDs array
-    - `filter_by_contains_open_tasks` - Filter notes with open tasks
-    - `filter_by_contains_tasks` - Filter notes with any tasks
-    - `filter_by_contains_images` - Filter notes with images
-    - `filter_by_contains_files` - Filter notes with files
-    - `config` - Response configuration (`include_snippet`, `include_content`)
+| Option | Description |
+|--------|-------------|
+| `--collection-id <uuid>` | Filter by collection ID (repeatable) |
+| `--open-tasks` | Only notes with open tasks |
+| `--tasks` | Only notes with tasks |
+| `--images` | Only notes with images |
+| `--files` | Only notes with files |
+| `--include-snippet` | Include snippet in results |
+| `--include-content` | Include full content in results |
 
-### Collections Management
+#### Collections
 
-- **`create_collection`** - Create a new collection
-  - Parameters: `title` (required), `description`
+```bash
+mem-ai collection list [options]
+mem-ai collection get <id>
+mem-ai collection create <title> [--description <text>]
+mem-ai collection delete <id> [--force]
+mem-ai collection search [query] [--include-description]
+```
 
-- **`get_collection`** - Retrieve a specific collection by ID
-  - Parameters: `collectionId` (required)
+**`collection list` options:**
 
-- **`delete_collection`** - Delete a collection
-  - Parameters: `collectionId` (required)
+| Option | Description |
+|--------|-------------|
+| `--limit <n>` | Number of collections (1-100) |
+| `--page <cursor>` | Pagination cursor |
+| `--order-by <field>` | `created_at` \| `updated_at` |
 
-- **`list_collections`** - List all collections with pagination
-  - Supports cursor-based pagination with `page` and `next_page`
-  - Parameters:
-    - `limit` - Maximum number of results (default: 50, max: 100)
-    - `page` - Cursor for pagination (from previous `next_page`)
-    - `order_by` - Sort order: `created_at` or `updated_at` (default: `updated_at`)
+## Examples
 
-- **`search_collections`** - Search across collections
-  - Parameters:
-    - `query` - Search query (optional)
-    - `config` - Response configuration (`include_description`)
+```bash
+# Send text to mem.ai
+mem-ai mem-it "Remember to review the Q1 roadmap"
+mem-ai mem-it "Task complete" --instructions "Mark as done"
+
+# List notes
+mem-ai note list
+mem-ai note list --limit 10 --order-by updated_at --json
+
+# Get a specific note
+mem-ai note get <note-id>
+
+# Create a note from text
+mem-ai note create --content "# Meeting Notes\n\n- Item 1"
+
+# Create a note from a file
+mem-ai note create --file meeting.md
+
+# Create a note from stdin
+cat meeting.md | mem-ai note create --file -
+
+# Add a note to a collection
+mem-ai note create --file note.md --collection-title "Work"
+
+# Delete a note (prompts for confirmation)
+mem-ai note delete <note-id>
+mem-ai note delete <note-id> --force
+
+# Search notes
+mem-ai note search "roadmap"
+mem-ai note search --open-tasks
+
+# Manage collections
+mem-ai collection list
+mem-ai collection create "Work" --description "Work related notes"
+mem-ai collection get <collection-id>
+mem-ai collection search "work"
+mem-ai collection delete <collection-id> --force
+```
 
 ## Development
 
@@ -182,94 +183,65 @@ MEM_API_KEY=your_api_key_here mem-ai-mcp-server
 ### Setup
 
 ```bash
-# Clone the repository
-git clone https://github.com/hskksk/mem-ai-mcp-server.git
-cd mem-ai-mcp-server
-
-# Install dependencies
+git clone https://github.com/hskksk/mem-ai-cli.git
+cd mem-ai-cli
 pnpm install
-
-# Copy environment template
-cp .env.example .env
-
-# Edit .env and add your API key
 ```
 
-### Development Commands
+### Commands
 
 ```bash
-# Run in development mode with auto-reload
-pnpm dev
-
-# Build the project
-pnpm build
-
-# Run tests
-pnpm test
-
-# Type check
-pnpm type-check
-
-# Lint
-pnpm lint
+pnpm dev         # Run in development mode (with auto-reload)
+pnpm build       # Build
+pnpm test        # Run tests
+pnpm type-check  # Type check
+pnpm lint        # Lint
 ```
 
 ### Project Structure
 
 ```
 src/
-├── index.ts              # Entry point
-├── server.ts             # MCP server setup
-├── config/
-│   └── env.ts           # Environment configuration
+├── cli.ts                      # Entry point
 ├── client/
-│   └── mem-api-client.ts # mem.ai API client
-├── tools/               # MCP tool implementations
-│   ├── base-tool.ts
-│   ├── mem-it.ts
-│   ├── notes/
-│   └── collections/
-├── types/               # TypeScript type definitions
-└── utils/               # Utility functions
+│   └── mem-api-client.ts       # mem.ai API client
+├── cli/
+│   ├── commands/               # Command implementations
+│   │   ├── mem-it.ts
+│   │   ├── note/
+│   │   └── collection/
+│   ├── formatters/             # Output formatters
+│   │   ├── note-formatter.ts
+│   │   └── collection-formatter.ts
+│   └── utils.ts
+├── types/
+│   └── api.ts                  # API type definitions
+└── utils/
+    └── error-handler.ts        # Error classes
 ```
 
-## API Documentation
-
-For detailed information about the mem.ai API, visit the [official API documentation](https://docs.mem.ai/api-reference/).
-
 ## Error Handling
-
-The server provides detailed error messages for common issues:
 
 - **401 Unauthorized**: Invalid API key
 - **404 Not Found**: Resource not found
 - **429 Too Many Requests**: Rate limit exceeded
 - **500 Server Error**: Internal server error
 
-All errors are returned in a structured format for easy debugging.
+Errors are written to stderr. Use `--json` for machine-readable error output.
 
-## Contributing
+## API Documentation
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+See the [mem.ai API documentation](https://docs.mem.ai/api-reference/).
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT - see [LICENSE](LICENSE).
 
 ## Links
 
-- [GitHub Repository](https://github.com/hskksk/mem-ai-mcp-server)
-- [npm Package](https://www.npmjs.com/package/@hskksk/mem-ai-mcp-server)
+- [GitHub Repository](https://github.com/hskksk/mem-ai-cli)
+- [npm Package](https://www.npmjs.com/package/@hskksk/mem-ai-cli)
 - [mem.ai Website](https://mem.ai)
-- [MCP Documentation](https://modelcontextprotocol.io)
-
-## Support
-
-If you encounter any issues or have questions:
-
-1. Check the [GitHub Issues](https://github.com/hskksk/mem-ai-mcp-server/issues)
-2. Create a new issue with detailed information
-3. Refer to the [mem.ai API documentation](https://docs.mem.ai/api-reference/)
 
 ## Changelog
 
