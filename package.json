@@ -1,56 +1,51 @@
 {
-  "name": "@hskksk/mem-ai-mcp-server",
-  "version": "0.2.0",
-  "description": "MCP server for mem.ai API integration",
-  "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "bin": {
-    "mem-ai-mcp-server": "./dist/index.js"
-  },
-  "files": [
-    "dist",
-    "README.md",
-    "CHANGELOG.md",
-    "LICENSE"
-  ],
-  "scripts": {
-    "build": "tsc",
-    "dev": "tsx watch src/index.ts",
-    "test": "node --test --import tsx tests/**/*.test.ts",
-    "lint": "eslint src --ext .ts",
-    "type-check": "tsc --noEmit",
-    "prepublishOnly": "pnpm run build && pnpm test",
-    "publish:npm": "npm publish --access public"
-  },
-  "engines": {
-    "node": ">=20.0.0"
-  },
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.4",
-    "dotenv": "^16.4.7",
-    "zod": "^3.25.1",
-    "zod-to-json-schema": "^3.25.0"
-  },
-  "devDependencies": {
-    "@types/node": "^22.10.5",
-    "@typescript-eslint/eslint-plugin": "^8.20.0",
-    "@typescript-eslint/parser": "^8.20.0",
-    "eslint": "^9.18.0",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.3"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/hskksk/mem-ai-mcp-server.git"
-  },
-  "keywords": [
-    "mcp",
-    "model-context-protocol",
-    "mem-ai",
-    "ai",
-    "memory"
-  ],
-  "author": "hskksk",
-  "license": "MIT"
+    "name": "@hskksk/mem-ai-cli",
+    "version": "0.2.0",
+    "description": "CLI tool for mem.ai API",
+    "type": "module",
+    "main": "./dist/cli.js",
+    "types": "./dist/cli.d.ts",
+    "bin": {
+        "mem-ai": "./dist/cli.js"
+    },
+    "files": [
+        "dist",
+        "README.md",
+        "CHANGELOG.md",
+        "LICENSE"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "test": "node --test --import tsx tests/**/*.test.ts",
+        "lint": "eslint src --ext .ts",
+        "type-check": "tsc --noEmit",
+        "prepublishOnly": "pnpm run build && pnpm test",
+        "publish:npm": "npm publish --access public"
+    },
+    "engines": {
+        "node": ">=20.0.0"
+    },
+    "dependencies": {
+        "commander": "^12.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "^22.10.5",
+        "@typescript-eslint/eslint-plugin": "^8.20.0",
+        "@typescript-eslint/parser": "^8.20.0",
+        "eslint": "^9.18.0",
+        "tsx": "^4.19.2",
+        "typescript": "^5.7.3"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/hskksk/mem-ai-cli.git"
+    },
+    "keywords": [
+        "cli",
+        "mem-ai",
+        "ai",
+        "memory"
+    ],
+    "author": "hskksk",
+    "license": "MIT"
 }
